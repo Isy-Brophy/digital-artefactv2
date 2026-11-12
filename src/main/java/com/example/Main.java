@@ -184,6 +184,31 @@ public class Main {
         }
     }
 
+    public static int getMenuInput(Scanner scanner){
+        // this loops until a valid input is given
+        while (true){
+            // this handles the user entering a non integer
+            try {
+                //takles in the users input
+                int input = scanner.nextInt();
+                scanner.nextLine();
+
+                //checks if the users input is valid - it must be between 1 and 8
+                while (input<=0 || input >= 9){
+                    System.out.println("Please enter a number between 1-8");
+                    input = scanner.nextInt();
+                    scanner.nextLine();
+                }
+                return input;
+                
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number between 1-8");
+                scanner.nextLine();
+            }
+
+        }
+    }
+    
     public static void main(String[] args){
         Scanner scanner = new Scanner(System.in);
         ArrayList<Module> modulesList = new ArrayList<>();
@@ -207,17 +232,7 @@ public class Main {
             System.out.println("7. View current assignments");
             System.out.println("8. Exit");
 
-            //takles in the users input
-            int input = scanner.nextInt();
-            scanner.nextLine();
-
-            //checks if the users input is valid - it must be between 1 and 8
-             while (input<=0 || input >= 9){
-                System.out.println("Please enter a number between 1-8");
-                input = scanner.nextInt();
-                scanner.nextLine();
-            }
-
+            int input = getMenuInput(scanner);
             
             // handles the user choosing an option 
             switch(input)
