@@ -28,9 +28,14 @@ public class Main {
     }
 
     public static void displayAllModules(ArrayList<Module> modulesList){ // prints out all the modules and their module code
-        for (int i = 0; i < modulesList.size(); i++){
-            Module theModule = modulesList.get(i);
-            System.out.println((i+1) + ". " + theModule.getModuleName() + " (" + theModule.getModuleCode() + ")");
+        if (modulesList.isEmpty()){
+            System.out.println("You have no modules, please add a modue first");
+        } else{
+            
+            for (int i = 0; i < modulesList.size(); i++){
+                Module theModule = modulesList.get(i);
+                System.out.println((i+1) + ". " + theModule.getModuleName() + " (" + theModule.getModuleCode() + ")");
+            }
         }
         
     }
@@ -243,11 +248,7 @@ public class Main {
                     break;
 
                 case 2: // displays all modules
-                    if (modulesList.isEmpty()){
-                        System.out.println("You have no modules, please add a modue first");
-                    } else {
-                        displayAllModules(modulesList);
-                    }
+                    displayAllModules(modulesList);
                     break;
                 
                 case 3: // adds a new assignment to a module
