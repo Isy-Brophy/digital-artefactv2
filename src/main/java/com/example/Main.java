@@ -1,31 +1,11 @@
 package com.example;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
 
-    public static Boolean isDateValid(String unvalidatedDate){ //validate that a date inout is in the correct format and isn't in the past
-        String dateFormat = "dd/MM/yyyy"; // sets the allowed format 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
-        LocalDate currentDate = LocalDate.now();
-
-        try{ // allows for the user to enter a date that could cause an error ut insteda of crashing a program, it handles the error and allows it to continue
-            LocalDate date = LocalDate.parse(unvalidatedDate, dateFormatter);
-            if (date.isBefore(currentDate)){
-                System.out.println("The date cannot be in the past, enter the assignment deadline in the format dd/mm/yyyy ");
-                return false;
-            } else {
-                return true;
-            }
-        } catch (Exception e){ // only trigger when its in the wrong format 
-            System.out.println("Invalid date format, enter the assignment deadline in the format dd/mm/yyyy");
-            return false;
-        }
-
-    }
 
     public static void displayAllModules(ArrayList<Module> modulesList){ // prints out all the modules and their module code
         if (modulesList.isEmpty()){
@@ -108,6 +88,9 @@ public class Main {
         String moduleCode = scanner.nextLine();
         Module newModule = new Module(moduleName, moduleCode);
         modulesList.add(newModule);
+        System.out.println("=================================");
+        System.out.println("Module " + moduleName + "(" +moduleCode + ") has been added");
+        System.out.println("=================================");
     }
     
     public static void addNewAssignment(Scanner scanner, ArrayList<Module> modulesList){
@@ -116,18 +99,23 @@ public class Main {
         if (chosenModule != null){
             System.out.println("Enter your assignment title: ");
             String theTitle = scanner.nextLine();
+            Assignment newAssignment = new Assignment(theTitle);
+
             System.out.println("Enter the assignment deadline in the format dd/mm/yyyy : ");
+
             String theDeadline;
+            
             do{ 
                 theDeadline = scanner.nextLine();
             } 
-            while (isDateValid(theDeadline)!= true);
+            while (newAssignment.isDateValid(theDeadline)!= true);
+
             
             System.out.println("Enter the priority");
+            String thePriority:
             String thePriority = scanner.nextLine();
             String theStatus = "not started";
-            // creates an assignment object and adds it to the chosen module's assignment list
-            Assignment newAssignment = new Assignment(theTitle, theDeadline, thePriority, theStatus);
+            // adds the assignment to the chosen module's assignment list
             chosenModule.addAssignment(newAssignment);
         }
     } 
