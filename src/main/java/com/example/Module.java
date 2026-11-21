@@ -35,6 +35,7 @@ public class Module {
             System.out.println("No assignments have been added");
         } else {
             for (int i = 0; i < moduleAssignments.size(); i++){
+                moduleAssignments.get(i).setCompleted();
                 Assignment theAssignment = moduleAssignments.get(i);
                 System.out.println((i+1) + ". "+ theAssignment.getTitle() + ": ");
                 System.out.println("   Deadline: "+ theAssignment.getDeadline());

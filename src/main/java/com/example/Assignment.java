@@ -2,6 +2,7 @@ package com.example;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 
 
 public class Assignment{
@@ -15,6 +16,7 @@ public class Assignment{
         this.title = title;
         this.status = "not started";
         this.completed = false;
+
     }
     
     public String getTitle(){
@@ -39,8 +41,8 @@ public class Assignment{
 
     public boolean isDateValid(String deadlineDate){
 
-        String dateFormat = "dd/MM/yyyy"; // sets the allowed format 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
+        String dateFormat = "dd/MM/uuuu";  // sets the allowed format - the uuuu means that it accounts for leap years and months having differet amounts of days
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat).withResolverStyle(ResolverStyle.STRICT);
         LocalDate currentDate = LocalDate.now();
 
         try{ // allows for the user to enter a date that could cause an error ut insteda of crashing a program, it handles the error and allows it to continue
@@ -68,8 +70,8 @@ public class Assignment{
     }
 
     public void setCompleted(){
-        String dateFormat = "dd/MM/yyyy"; // sets the allowed format 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
+        String dateFormat = "dd/MM/uuuu"; // sets the allowed format 
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat).withResolverStyle(ResolverStyle.STRICT);
         LocalDate currentDate = LocalDate.now();
         LocalDate deadlineDate = LocalDate.parse(this.deadline, dateFormatter);
         if (this.status.equalsIgnoreCase("completed")){
@@ -83,7 +85,15 @@ public class Assignment{
         }
     }
 
-    
+    public boolean isPriorityValid(String newPriority){
+        if (newPriority.equalsIgnoreCase("high")||newPriority.equalsIgnoreCase("medium")||newPriority.equalsIgnoreCase("low")){
+            this.priority = newPriority;
+            return true;
+        } else{
+            System.out.println("Invalid priority, please enter one of the following : high, medium, low");
+            return false;
+        }
+    }
 
 
 }

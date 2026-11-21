@@ -101,22 +101,30 @@ public class Main {
             String theTitle = scanner.nextLine();
             Assignment newAssignment = new Assignment(theTitle);
 
+            // adds the assignment to the chosen module's assignment list
+            chosenModule.addAssignment(newAssignment);
+
             System.out.println("Enter the assignment deadline in the format dd/mm/yyyy : ");
 
             String theDeadline;
             
+            // ensures that the user can only enter a valid date
             do{ 
                 theDeadline = scanner.nextLine();
             } 
             while (newAssignment.isDateValid(theDeadline)!= true);
 
             
-            System.out.println("Enter the priority");
-            String thePriority:
-            String thePriority = scanner.nextLine();
-            String theStatus = "not started";
-            // adds the assignment to the chosen module's assignment list
-            chosenModule.addAssignment(newAssignment);
+            System.out.println("Enter the priority: high/medium/low");
+            String thePriority;
+
+            // ensures that the user can only enter a valid priority
+            do{
+                thePriority = scanner.nextLine();
+            }
+            while (newAssignment.isPriorityValid(thePriority)!= true);
+
+
         }
     } 
 
