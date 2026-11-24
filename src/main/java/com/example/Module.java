@@ -3,8 +3,8 @@ package com.example;
 import java.util.ArrayList;
 
 public class Module {
-    String moduleName;
-    String moduleCode;
+    private String moduleName;
+    private String moduleCode;
     ArrayList<Assignment> moduleAssignments;
 
     public Module (String moduleName, String moduleCode){

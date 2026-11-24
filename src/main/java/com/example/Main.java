@@ -1,217 +1,15 @@
 package com.example;
 
 import java.util.ArrayList;
-import java.util.Scanner;
+
 
 public class Main {
 
 
-
-    public static void displayAllModules(ArrayList<Module> modulesList){ // prints out all the modules and their module code
-        if (modulesList.isEmpty()){
-            System.out.println("You have no modules, please add a modue first");
-        } else{
-            
-            for (int i = 0; i < modulesList.size(); i++){
-                Module theModule = modulesList.get(i);
-                System.out.println((i+1) + ". " + theModule.getModuleName() + " (" + theModule.getModuleCode() + ")");
-            }
-        }
-        
-    }
-
-    public static Module selectModule(ArrayList<Module> modulesList, Scanner scanner){ // allows the user to select a module
-        if (modulesList.isEmpty()){
-            System.out.println("There are no modules to select, please add one first");
-            return null;
-        } else {
-            Module chosenModule = null;
-            while (chosenModule == null){
-                try{ // allows for the code to handle the user entering a non integer 
-                    System.out.println("Select a module");
-                    displayAllModules(modulesList);
-                    int choose = scanner.nextInt();
-                    scanner.nextLine();
-                    // ensures the user chooses a valid number
-                    while (choose <= 0 || choose > modulesList.size()){
-                        System.out.println("Please choose a valid module number");
-                        choose = scanner.nextInt();
-                        scanner.nextLine();
-                    }
-
-                    chosenModule = modulesList.get(choose-1);
-                } catch (Exception e){
-                    System.out.println("Please enter a valid number");
-                    scanner.nextLine();
-                }
-            }
-            return chosenModule;
-
-        }
-    }
-   
-    public static Assignment selectAssignment(Module chosenModule, Scanner scanner){ // allows the user to select an assignment in a module
-        if (chosenModule.getModuleAssignments().isEmpty()){
-            System.out.println("There are no assignments in this module");
-            return null;
-        } else{
-
-            chosenModule.displayAssignments();
-            Assignment chosenAssignment = null;
-            while (chosenAssignment == null){
-                try { // allows for the code to handle the user entering a upon integer
-                    System.out.println("select an assignment");
-                    int num = scanner.nextInt();
-                    scanner.nextLine();
-
-                    // ensures the user chooses a valid number
-                    while (num <= 0 || num > (chosenModule.getModuleAssignments().size())){
-                        System.out.println("Please choose a valid module number");
-                        num = scanner.nextInt();
-                        scanner.nextLine();
-                    }
-                    chosenAssignment = chosenModule.getModuleAssignments().get(num-1);
-                } catch (Exception e) {
-                    System.out.println("Please enter a valid number");
-                    scanner.nextLine();
-                }
-            }
-            return chosenAssignment;
-        }
-    }
-
-    public static void addNewModule(Scanner scanner, ArrayList<Module> modulesList){
-        // creates an instance of the module class and adds it to the moduleList
-        System.out.println("Please enter the module name: ");
-        String moduleName = scanner.nextLine();
-        System.out.println("Please enter the module code: ");
-        String moduleCode = scanner.nextLine();
-        Module newModule = new Module(moduleName, moduleCode);
-        modulesList.add(newModule);
-        System.out.println("=================================");
-        System.out.println("Module " + moduleName + "(" +moduleCode + ") has been added");
-        System.out.println("=================================");
-    }
-    
-    public static void addNewAssignment(Scanner scanner, ArrayList<Module> modulesList){
-        // creates an instance of the assignment class and adds it to the attribute moduleAssignments which is a list that contains all of the assignments for that module
-        Module chosenModule = selectModule(modulesList, scanner);
-        if (chosenModule != null){
-            System.out.println("Enter your assignment title: ");
-            String theTitle = scanner.nextLine();
-            Assignment newAssignment = new Assignment(theTitle);
-
-            // adds the assignment to the chosen module's assignment list
-            chosenModule.addAssignment(newAssignment);
-
-            System.out.println("Enter the assignment deadline in the format dd/mm/yyyy : ");
-
-            String theDeadline;
-            
-            // ensures that the user can only enter a valid date
-            do{ 
-                theDeadline = scanner.nextLine();
-            } 
-            while (newAssignment.isDateValid(theDeadline)!= true);
-
-            
-            System.out.println("Enter the priority: high/medium/low");
-            String thePriority;
-
-            // ensures that the user can only enter a valid priority
-            do{
-                thePriority = scanner.nextLine();
-            }
-            while (newAssignment.isPriorityValid(thePriority)!= true);
-
-
-        }
-    } 
-
-    public static void displayEverySingleAssignment(Scanner scanner, ArrayList<Module> modulesList){
-        if (modulesList.isEmpty() ){
-            System.out.println("You don't have any modules or assignments, please add a module first and add your assignments");
-        } else {
-            for (int i = 0; i< modulesList.size(); i++){
-                Module theModule = modulesList.get(i);
-                System.out.println("Module: " + theModule.getModuleName() + " (" + theModule.getModuleCode() + ")");
-                theModule.displayAssignments();
-            }
-        }
-    }
-
-    public static void updateStatus(Scanner scanner, ArrayList<Module> modulesList ){
-        System.out.println("Choose the module that contains the assignment you want to update");
-        // allows the user to choose a module
-        Module chosenModule = selectModule(modulesList, scanner);
-        
-        if (chosenModule != null){
-            // allows the user to choose an assignment in the chosen module
-            Assignment chosenAssignment = selectAssignment(chosenModule, scanner);
-            if (chosenAssignment != null){
-                System.out.println("Select an assignment that you want to oupdate the status of");
-
-                System.out.println("What would you like to change the status to? in progress/needs review/need assistance/completed");
-                String newStatus = scanner.nextLine();
-                
-                // ensures that the user chooses a valid status
-                while (chosenAssignment.setStatus(newStatus)!= true){
-                    System.out.println("Please choose a valid status? in progress/needs review/need assistance/completed");
-                    newStatus = scanner.nextLine();
-                }
-            }
-            
-        }
-    }
-    
-    public static boolean isAssignments(Module theModule){
-        return !theModule.getModuleAssignments().isEmpty(); 
-    }
-    
-    public static void viewUncompletedAssigments(Scanner scanner,ArrayList<Module> modulesList){
-        if (modulesList.isEmpty() ){
-            System.out.println("You don't have any modules and assignments, please add a module first and add your assignments");
-        } else {
-            for (int i = 0; i< modulesList.size(); i++){
-                Module theModule = modulesList.get(i);
-                if (isAssignments(theModule)){
-                    System.out.println("Module: " + theModule.getModuleName() + " (" + theModule.getModuleCode() + ")");
-                    theModule.displayNotCompletedAssignments();
-                } else {
-                    System.out.println("You have no assignments");
-                }
-
-            }
-        }
-    }
-
-    public static int getMenuInput(Scanner scanner){
-        // this loops until a valid input is given
-        while (true){
-            // this handles the user entering a non integer
-            try {
-                //takles in the users input
-                int input = scanner.nextInt();
-                scanner.nextLine();
-
-                //checks if the users input is valid - it must be between 1 and 8
-                while (input<=0 || input >= 9){
-                    System.out.println("Please enter a number between 1-8");
-                    input = scanner.nextInt();
-                    scanner.nextLine();
-                }
-                return input;
-                
-            } catch (Exception e) {
-                System.out.println("Please enter a valid number between 1-8");
-                scanner.nextLine();
-            }
-
-        }
-    }
     
     public static void main(String[] args){
-        Scanner scanner = new Scanner(System.in);
+        Manager  manager = new Manager();
+
         ArrayList<Module> modulesList = new ArrayList<>();
 
         boolean run = true;
@@ -233,41 +31,41 @@ public class Main {
             System.out.println("7. View current assignments");
             System.out.println("8. Exit");
 
-            int input = getMenuInput(scanner);
+            int input = manager.getMenuInput();
             
             // handles the user choosing an option 
             switch(input)
             {
                 case 1: // allows the user to add a new module 
                     // creates an instance of the module class and adds it to the moduleList
-                    addNewModule(scanner, modulesList);
+                    manager.addNewModule(modulesList);
                     break;
 
                 case 2: // displays all modules
-                    displayAllModules(modulesList);
+                    manager.displayAllModules(modulesList);
                     break;
                 
                 case 3: // adds a new assignment to a module
-                    addNewAssignment(scanner, modulesList);
+                    manager.addNewAssignment(modulesList);
                     break;
 
                 case 4: // displays all the assignments in a chosen module
-                    Module chosenModule = selectModule(modulesList, scanner);
+                    Module chosenModule = manager.selectModule(modulesList);
                     if (chosenModule != null){
                         chosenModule.displayAssignments();
                     }
                     break;
 
                 case 5: // displays all of the assignments in all modules
-                    displayEverySingleAssignment(scanner, modulesList);
+                    manager.displayEverySingleAssignment(modulesList);
                     break;
 
                 case 6: // updates the status of a chosen assignment 
-                    updateStatus(scanner, modulesList);
+                    manager.updateStatus( modulesList);
                     break;  
                 
                 case 7: // view all assignments that have not yet been completed/ are before their deadline
-                    viewUncompletedAssigments(scanner, modulesList);
+                    manager.viewUncompletedAssigments(modulesList);
                     break;
                 
                 case 8: // close the program
@@ -277,8 +75,8 @@ public class Main {
 
             }
             } catch (Exception e){
-                System.out.println("please enter a valid number");
-                scanner.nextLine();
+                System.out.println("there has been an error");
+                break;
             }
         }
     }

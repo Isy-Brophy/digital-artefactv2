@@ -29,7 +29,7 @@ public class testModule {
 
     }
     
-    @Test 
+    @Test  // tests that the displayAssignment method handles when the user has no assignnmets in a module
     public void testDisplayAssignmentsNoAssignments(){
         Module theModule = new Module("Test Module", "123");
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -46,4 +46,26 @@ public class testModule {
             System.setOut(origionalOutput);
         }
     }
+
+     @Test  // tests that the displayAssignment method handles when the user has no assignmnets in a module
+    public void testDisplayNotCompletedAssignmentsNoAssignments(){
+        Module theModule = new Module("Test Module", "123");
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        java.io.PrintStream origionalOutput = System.out; // stores the origional output section
+        System.setOut(new java.io.PrintStream(output)); // sets whatever is outputted to be stored by the variable output 
+
+
+        try {
+            theModule.displayNotCompletedAssignments();
+            String result = output.toString();
+            Assertions.assertTrue(result.contains("No assignments have been added"));
+        } finally{
+            // sets the system output back to the terminal 
+            System.setOut(origionalOutput);
+        }
+    }
+
+
+
+
 }

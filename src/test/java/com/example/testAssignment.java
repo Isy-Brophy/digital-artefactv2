@@ -132,7 +132,7 @@ public class testAssignment {
         try {
             //tests if a valid input is accepted is valid
             Assertions.assertFalse(theAssignment.isPriorityValid(invalidInput));
-            // checks that the priority attribute is correctly updated
+            // checks that the priority attribute isn't
             Assertions.assertNull(theAssignment.getPriority());
             String result = output.toString();
             Assertions.assertTrue(result.contains("Invalid priority, please enter one of the following : high, medium, low"));
@@ -140,10 +140,53 @@ public class testAssignment {
             // sets the system output back to the terminal 
             System.setOut(origionalOutput);
         }
-
-
     }
 
+    @Test //checks that setStatus returns true and updates the attribute if a valid inputs given
+    public void testSetStatusValidInput(){
+        Assignment theAssignment = new Assignment("Test assignment");
+        String validInput = "in progress";
+        Assertions.assertTrue( theAssignment.setStatus(validInput)); // checks that it returns true as its a valid input
+        Assertions.assertEquals(validInput, theAssignment.getStatus()); // checks that the status attribute is correctly updated
+    }
 
+    @Test //checks that setStatus returns true and updates the attribute if a valid inputs given
+    public void testSetStatusInvalidInput(){
+        Assignment theAssignment = new Assignment("Test assignment");
+        String invalidInput = "editing";
+        Assertions.assertFalse( theAssignment.setStatus(invalidInput)); // checks that it returns false as its an invalid input
+        Assertions.assertNull(theAssignment.getStatus()); // checks that the status attribute isn't updated
+    }
+
+    @Test // tests that the completed attribute is correctly updated if the status is set to completed
+    public void testSetCompleted(){ 
+        Assignment theAssignment = new Assignment("Test Assignment");
+        theAssignment.setStatus("completed");
+        theAssignment.setCompleted();
+        Assertions.assertTrue(theAssignment.getCompleted());
+    }
+
+    @Test // tests that the completed attribute is updated to true if the deadlines gone and the user hasn't set the status to completed
+    public void testSetCompletedMissedDeadline(){
+        Assignment theAssignment = new Assignment("Test Assignment");
+        theAssignment.setStatus("in progress");
+        theAssignment.setDeadline("01/01/2024"); // deadline in the past
+        theAssignment.setCompleted();
+        Assertions.assertTrue(theAssignment.getCompleted());
+    }
+
+    @Test // test that the completed attribute is set to false if the deadline attribute is in the future and the user hasn't updated the status to completed
+    public void testSetCompletedNotCompleted() {
+        Assignment theAssignment = new Assignment("Test Assignment");
+        theAssignment.setStatus("in progress");
+        theAssignment.setDeadline("01/01/2025"); // deadline in the future
+        theAssignment.setCompleted();
+        Assertions.assertFalse(theAssignment.getCompleted());
+    }
 
 }
+
+
+
+
+

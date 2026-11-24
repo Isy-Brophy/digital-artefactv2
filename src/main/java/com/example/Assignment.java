@@ -6,11 +6,12 @@ import java.time.format.ResolverStyle;
 
 
 public class Assignment{
-    String title;
-    String deadline;
-    String priority;
-    String status;
-    Boolean completed;
+    // private means these attributes can only be accessed within the class and not by any other classes
+    private String title;
+    private  String deadline;
+    private String priority;
+    private String status;
+    private Boolean completed;
 
     public Assignment (String title){
         this.title = title;
@@ -27,6 +28,7 @@ public class Assignment{
         return deadline;
     }
 
+
     public String getPriority(){
         return priority;
     }
@@ -38,6 +40,17 @@ public class Assignment{
     public Boolean getCompleted(){
         return completed;
     }
+
+        public void setDeadline(String theDeadline){
+        this.deadline = theDeadline;
+    }
+        public void setPriority(String thePriority){
+        this.priority = thePriority;
+    }
+
+
+
+
 
     public boolean isDateValid(String deadlineDate){
 
@@ -51,7 +64,7 @@ public class Assignment{
                 System.out.println("The date cannot be in the past, enter the assignment deadline in the format dd/mm/yyyy ");
                 return false;
             } else {
-                this.deadline = deadlineDate;
+                this.setDeadline(deadlineDate);
                 return true;
             }
         } catch (Exception e){ // only trigger when its in the wrong format 
@@ -69,14 +82,14 @@ public class Assignment{
         }
     }
 
-    public void setCompleted(){
+    public void setCompleted(){ // this checks if the assignemnet has been ocmpleted or the dadline is passed and updates the completed attribute
         String dateFormat = "dd/MM/uuuu"; // sets the allowed format 
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat).withResolverStyle(ResolverStyle.STRICT);
         LocalDate currentDate = LocalDate.now();
         LocalDate deadlineDate = LocalDate.parse(this.deadline, dateFormatter);
         if (this.status.equalsIgnoreCase("completed")){
             this.completed = true;
-        } else if (currentDate.isAfter(deadlineDate)){
+        } else if (currentDate.isAfter(deadlineDate)){ // if the current date is after the deadline and the status isn't completed, the status is updated 
             this.status = "missed deadline";
             this.completed = true;
         } else {
@@ -87,7 +100,7 @@ public class Assignment{
 
     public boolean isPriorityValid(String newPriority){
         if (newPriority.equalsIgnoreCase("high")||newPriority.equalsIgnoreCase("medium")||newPriority.equalsIgnoreCase("low")){
-            this.priority = newPriority;
+            this.setPriority(newPriority);
             return true;
         } else{
             System.out.println("Invalid priority, please enter one of the following : high, medium, low");
