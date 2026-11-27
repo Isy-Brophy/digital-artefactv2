@@ -1,7 +1,5 @@
 package com.example;
 
-import java.util.ArrayList;
-
 
 public class Main {
 
@@ -10,7 +8,7 @@ public class Main {
     public static void main(String[] args){
         Manager  manager = new Manager();
 
-        ArrayList<Module> modulesList = new ArrayList<>();
+        
 
         boolean run = true;
 
@@ -38,34 +36,34 @@ public class Main {
             {
                 case 1: // allows the user to add a new module 
                     // creates an instance of the module class and adds it to the moduleList
-                    manager.addNewModule(modulesList);
+                    manager.addNewModule();
                     break;
 
                 case 2: // displays all modules
-                    manager.displayAllModules(modulesList);
+                    manager.displayAllModules();
                     break;
                 
                 case 3: // adds a new assignment to a module
-                    manager.addNewAssignment(modulesList);
+                    manager.addNewAssignment();
                     break;
 
                 case 4: // displays all the assignments in a chosen module
-                    Module chosenModule = manager.selectModule(modulesList);
+                    Module chosenModule = manager.selectModule();
                     if (chosenModule != null){
                         chosenModule.displayAssignments();
                     }
                     break;
 
                 case 5: // displays all of the assignments in all modules
-                    manager.displayEverySingleAssignment(modulesList);
+                    manager.displayEverySingleAssignment();
                     break;
 
                 case 6: // updates the status of a chosen assignment 
-                    manager.updateStatus( modulesList);
+                    manager.updateStatus( );
                     break;  
                 
                 case 7: // view all assignments that have not yet been completed/ are before their deadline
-                    manager.viewUncompletedAssigments(modulesList);
+                    manager.viewUncompletedAssigments();
                     break;
                 
                 case 8: // close the program

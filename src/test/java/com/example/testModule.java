@@ -17,7 +17,7 @@ public class testModule {
 
     }
     // tests that you can add an assignment to a module
-    @Test 
+    @Test //TC-023 
     public void testAddAssignmnet() {
         //  creates test module and assignment
         Module theModule = new Module("Test Module", "123");
@@ -28,8 +28,8 @@ public class testModule {
         Assertions.assertEquals(theAssignment, theModule.getModuleAssignments().get(0)); // checks that the assignment is correctly added with the right attributes
 
     }
-    
-    @Test  // tests that the displayAssignment method handles when the user has no assignnmets in a module
+    // tests that the displayAssignment method handles when the user has no assignnmets in a module
+    @Test  //TC-027
     public void testDisplayAssignmentsNoAssignments(){
         Module theModule = new Module("Test Module", "123");
         ByteArrayOutputStream output = new ByteArrayOutputStream();

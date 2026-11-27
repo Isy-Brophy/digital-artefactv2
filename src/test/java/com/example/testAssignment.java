@@ -24,84 +24,131 @@ public class testAssignment {
     }
 
     // tests that the isDateValid method allows the user to enter a date in the correct format and sets the deadline attriute to it, if the date is today
-    @Test
+    @Test //TC-013
     public void testIsDateValidWithValidDateNow(){
+
+
         Assignment theAssignment = new Assignment("Test assignment");
 
-        String todayDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/mm/uuuu").withResolverStyle(ResolverStyle.STRICT));
+        String todayDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT));
+        Boolean result = theAssignment.isDateValid(todayDate);
         //tests todays date is valid
-        Assertions.assertTrue(theAssignment.isDateValid(todayDate));
+        Assertions.assertTrue(result);
         // checks that the deadline attribute is correctly updated
         Assertions.assertEquals(todayDate, theAssignment.getDeadline());
+    
 
     }
 
-    @Test// tests that the isDateValid method allows the user to enter a date in the correct format and sets the deadline attriute to it, if the date is in the future
+    // tests that the isDateValid method allows the user to enter a date in the correct format and sets the deadline attriute to it, if the date is in the future
+    @Test //TC-013.5
     public void testIsDateValidWithValidDateFuture(){ 
         Assignment theAssignment = new Assignment("Test assignment");
 
         //tests a furure date is valid
-        String futureDate = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("dd/mm/uuuu").withResolverStyle(ResolverStyle.STRICT));
+        String futureDate = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT));
+        Boolean result = theAssignment.isDateValid(futureDate);
+
+
         //tests the future date is valid
-        Assertions.assertTrue(theAssignment.isDateValid(futureDate));
+        Assertions.assertTrue(result);
         // checks that the deadline attribute is correctly updated
         Assertions.assertEquals(futureDate, theAssignment.getDeadline());
 
     }
 
-
-
-
     // tests that it doesn't allow dates in the past
-    @Test 
+    @Test //TC-016
     public void testIsDateValidWithInvalidDatePast(){
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        java.io.PrintStream origionalOutput = System.out; // stores the origional output section
+        System.setOut(new java.io.PrintStream(output)); 
+        try {
+            Assignment theAssignment = new Assignment("Test assignment");
 
-        Assignment theAssignment = new Assignment("Test assignment");
-
-        // tests that the function doesn't allow the user to enter a date in the past
-        String pastDate = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT));
-        // tests the past date is invalid
-        Assertions.assertFalse(theAssignment.isDateValid(pastDate));
-        Assertions.assertNull(theAssignment.getDeadline());
+            // tests that the function doesn't allow the user to enter a date in the past
+            String pastDate = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT));
+            Boolean result = theAssignment.isDateValid(pastDate);
+            String outputText = output.toString();
+            // tests the past date is invalid
+            Assertions.assertFalse(result);
+            Assertions.assertNull(theAssignment.getDeadline());
+            Assertions.assertTrue(outputText.contains("The date cannot be in the past, enter the assignment deadline in the format dd/mm/yyyy"));
+        
+        } finally {
+            System.setOut(origionalOutput);
+        }
 
     }
 
     // tests that it doesn't allow dates in the wrong format
-    @Test 
+    @Test //TC=015
     public void testIsDateValidWithInvalidDateFormat(){
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        java.io.PrintStream origionalOutput = System.out; // stores the origional output section
+        System.setOut(new java.io.PrintStream(output)); 
 
-        Assignment theAssignment = new Assignment("Test assignment");
+        try{
+            Assignment theAssignment = new Assignment("Test assignment");
+            String invalidFormateDateText = "1st january";
+            Boolean result = theAssignment.isDateValid(invalidFormateDateText);
+            Assertions.assertFalse(result);
+            String outputText = output.toString();
+            Assertions.assertNull(theAssignment.getDeadline());
+            Assertions.assertTrue(outputText.contains("Invalid date format, enter the assignment deadline in the format dd/mm/yyyy"));
 
+        } finally {
+            System.setOut(origionalOutput);
+        }
 
-        String invalidFormatDate = "2027/03/03";
-
-        // tests that the wrong format is invalid
-        Assertions.assertFalse(theAssignment.isDateValid(invalidFormatDate));
-        Assertions.assertNull(theAssignment.getDeadline());
-
-        // tests that dates that don't exist are invalid
-        String invalidDate = "31/02/2027";
-        Assertions.assertFalse(theAssignment.isDateValid(invalidDate));
-        Assertions.assertNull(theAssignment.getDeadline());
 
     }
 
-        // tests that it doesn't allow dates that don't exist in the calendar
-    @Test 
+    // tests that it doesn't allow dates in the wrong format
+    @Test //TC-014 
+    public void testIsDateValidWithInvalidDateFormatText(){
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        java.io.PrintStream origionalOutput = System.out; // stores the origional output section
+        System.setOut(new java.io.PrintStream(output)); 
+
+        try{
+            Assignment theAssignment = new Assignment("Test assignment");
+            String invalidFormateDateText = "1st january";
+            Boolean result = (theAssignment.isDateValid(invalidFormateDateText));
+            String outputText = output.toString();
+            Assertions.assertFalse(result);
+            Assertions.assertNull(theAssignment.getDeadline());
+            Assertions.assertTrue(outputText.contains("Invalid date format, enter the assignment deadline in the format dd/mm/yyyy"));
+        } finally {
+            System.setOut(origionalOutput);
+        }
+    }
+
+    // tests that it doesn't allow dates that don't exist in the calendar
+    @Test //TC-017
     public void testIsDateValidWithInvalidDateNonexistant(){
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        java.io.PrintStream origionalOutput = System.out; // stores the origional output section
+        System.setOut(new java.io.PrintStream(output)); 
 
-        Assignment theAssignment = new Assignment("Test assignment");
+        try {
+            Assignment theAssignment = new Assignment("Test assignment");
 
-
-        // tests that dates that don't exist are invalid
-        String invalidDate = "31/02/2027";
-        Assertions.assertFalse(theAssignment.isDateValid(invalidDate));
-        Assertions.assertNull(theAssignment.getDeadline());
+            // tests that dates that don't exist are invalid
+            String invalidDate = "31/02/2027";
+            Boolean result = theAssignment.isDateValid(invalidDate);
+            String outputText = output.toString();
+            Assertions.assertFalse(result);
+            Assertions.assertNull(theAssignment.getDeadline());
+            Assertions.assertTrue(outputText.contains("Invalid date format, enter the assignment deadline in the format dd/mm/yyyy"));
+        } finally{
+            System.setOut(origionalOutput);
+        }
 
     }
 
     //tests isValidPriority with valid inputs
-    @Test
+    @Test //TC-018
     public void testIsPriorityValid(){
         Assignment theAssignment = new Assignment("Test assignment");
 
@@ -119,7 +166,7 @@ public class testAssignment {
     }
 
     // tests an invalid input is rejected by isPriorityValid
-    @Test
+    @Test //TC-019
     public void testIsPriorityValidInvalidInput(){
         Assignment theAssignment = new Assignment("Test assignment");
 
@@ -141,27 +188,30 @@ public class testAssignment {
             System.setOut(origionalOutput);
         }
     }
-
-    @Test //checks that setStatus returns true and updates the attribute if a valid inputs given
-    public void testSetStatusValidInput(){
+    
+    //checks that setStatus returns true and updates the attribute if a valid inputs given
+    @Test //TC-028
+     public void testSetStatusValidInput(){
         Assignment theAssignment = new Assignment("Test assignment");
         String validInput = "in progress";
         Assertions.assertTrue( theAssignment.setStatus(validInput)); // checks that it returns true as its a valid input
         Assertions.assertEquals(validInput, theAssignment.getStatus()); // checks that the status attribute is correctly updated
     }
 
-    @Test //checks that setStatus returns true and updates the attribute if a valid inputs given
+    //checks that setStatus returns true and updates the attribute if a valid inputs given
+    @Test //TC-030
     public void testSetStatusInvalidInput(){
         Assignment theAssignment = new Assignment("Test assignment");
-        String invalidInput = "editing";
+        String invalidInput = "finished";
         Assertions.assertFalse( theAssignment.setStatus(invalidInput)); // checks that it returns false as its an invalid input
-        Assertions.assertNull(theAssignment.getStatus()); // checks that the status attribute isn't updated
+        Assertions.assertEquals("not started",theAssignment.getStatus()); // checks that the status attribute isn't updated, and kept to the origional value
     }
 
     @Test // tests that the completed attribute is correctly updated if the status is set to completed
     public void testSetCompleted(){ 
         Assignment theAssignment = new Assignment("Test Assignment");
         theAssignment.setStatus("completed");
+        theAssignment.setDeadline("01/01/2028");
         theAssignment.setCompleted();
         Assertions.assertTrue(theAssignment.getCompleted());
     }
@@ -179,7 +229,7 @@ public class testAssignment {
     public void testSetCompletedNotCompleted() {
         Assignment theAssignment = new Assignment("Test Assignment");
         theAssignment.setStatus("in progress");
-        theAssignment.setDeadline("01/01/2025"); // deadline in the future
+        theAssignment.setDeadline("01/01/2028"); // deadline in the future
         theAssignment.setCompleted();
         Assertions.assertFalse(theAssignment.getCompleted());
     }

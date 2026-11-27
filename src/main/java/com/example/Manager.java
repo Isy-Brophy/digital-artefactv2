@@ -4,26 +4,28 @@ import java.util.Scanner;
 
 public class Manager {
     private Scanner scanner;
+    private ArrayList<Module> modulesList;
 
     public Manager(){
         this.scanner = new Scanner(System.in);
+        this.modulesList = new ArrayList<>();
     }
 
-    public void displayAllModules(ArrayList<Module> modulesList){ // prints out all the modules and their module code
-        if (modulesList.isEmpty()){
+    public void displayAllModules(){ // prints out all the modules and their module code
+        if (this.modulesList.isEmpty()){
             System.out.println("You have no modules, please add a modue first");
         } else{
             
-            for (int i = 0; i < modulesList.size(); i++){
-                Module theModule = modulesList.get(i);
+            for (int i = 0; i < this.modulesList.size(); i++){
+                Module theModule = this.modulesList.get(i);
                 System.out.println((i+1) + ". " + theModule.getModuleName() + " (" + theModule.getModuleCode() + ")");
             }
         }
         
     }
 
-    public  Module selectModule(ArrayList<Module> modulesList){ // allows the user to select a module
-        if (modulesList.isEmpty()){
+    public  Module selectModule(){ // allows the user to select a module
+        if (this.modulesList.isEmpty()){
             System.out.println("There are no modules to select, please add one first");
             return null;
         } else {
@@ -31,19 +33,19 @@ public class Manager {
             while (chosenModule == null){
                 try{ // allows for the code to handle the user entering a non integer 
                     System.out.println("Select a module");
-                    displayAllModules(modulesList);
+                    displayAllModules();
                     int choose = this.scanner.nextInt();
                     this.scanner.nextLine();
                     // ensures the user chooses a valid number
-                    while (choose <= 0 || choose > modulesList.size()){
+                    while (choose <= 0 || choose > this.modulesList.size()){
                         System.out.println("Please choose a valid module number");
                         choose = this.scanner.nextInt();
                         this.scanner.nextLine();
                     }
 
-                    chosenModule = modulesList.get(choose-1);
+                    chosenModule = this.modulesList.get(choose-1);
                 } catch (Exception e){
-                    System.out.println("Please enter a valid number");
+                    System.out.println("Please enter a valid number in integer format");
                     this.scanner.nextLine();
                 }
             }
@@ -82,22 +84,28 @@ public class Manager {
         }
     }
 
-    public void addNewModule(ArrayList<Module> modulesList){
+    public void addNewModule(){
         // creates an instance of the module class and adds it to the moduleList
         System.out.println("Please enter the module name: ");
         String moduleName = this.scanner.nextLine();
         System.out.println("Please enter the module code: ");
         String moduleCode = this.scanner.nextLine();
         Module newModule = new Module(moduleName, moduleCode);
-        modulesList.add(newModule);
+        this.modulesList.add(newModule);
         System.out.println("=================================");
         System.out.println("Module " + moduleName + "(" +moduleCode + ") has been added");
         System.out.println("=================================");
     }
     
-    public  void addNewAssignment( ArrayList<Module> modulesList){
+    public ArrayList<Module> getModulesList(){
+        return this.modulesList;
+    }
+
+    
+
+    public  void addNewAssignment(){
         // creates an instance of the assignment class and adds it to the attribute moduleAssignments which is a list that contains all of the assignments for that module
-        Module chosenModule = selectModule(modulesList);
+        Module chosenModule = selectModule();
         if (chosenModule != null){
             System.out.println("Enter your assignment title: ");
             String theTitle = this.scanner.nextLine();
@@ -125,27 +133,29 @@ public class Manager {
                 thePriority = this.scanner.nextLine();
             }
             while (newAssignment.isPriorityValid(thePriority)!= true);
-
+            System.out.println("=================================");
+            System.out.println("Assignment " + theTitle + " has been added to module " + chosenModule.getModuleName() + "(" + chosenModule.getModuleCode() + ")");
+            System.out.println("=================================");
 
         }
     } 
 
-    public void displayEverySingleAssignment( ArrayList<Module> modulesList){
-        if (modulesList.isEmpty() ){
+    public void displayEverySingleAssignment(){
+        if (this.modulesList.isEmpty() ){
             System.out.println("You don't have any modules or assignments, please add a module first and add your assignments");
         } else {
-            for (int i = 0; i< modulesList.size(); i++){
-                Module theModule = modulesList.get(i);
+            for (int i = 0; i< this.modulesList.size(); i++){
+                Module theModule = this.modulesList.get(i);
                 System.out.println("Module: " + theModule.getModuleName() + " (" + theModule.getModuleCode() + ")");
                 theModule.displayAssignments();
             }
         }
     }
 
-    public  void updateStatus( ArrayList<Module> modulesList ){
+    public  void updateStatus(){
         System.out.println("Choose the module that contains the assignment you want to update");
         // allows the user to choose a module
-        Module chosenModule = selectModule(modulesList);
+        Module chosenModule = selectModule();
         
         if (chosenModule != null){
             // allows the user to choose an assignment in the chosen module
@@ -170,12 +180,12 @@ public class Manager {
         return !theModule.getModuleAssignments().isEmpty(); 
     }
     
-    public  void viewUncompletedAssigments(ArrayList<Module> modulesList){
-        if (modulesList.isEmpty() ){
+    public  void viewUncompletedAssigments(){
+        if (this.modulesList.isEmpty() ){
             System.out.println("You don't have any modules and assignments, please add a module first and add your assignments");
         } else {
-            for (int i = 0; i< modulesList.size(); i++){
-                Module theModule = modulesList.get(i);
+            for (int i = 0; i< this.modulesList.size(); i++){
+                Module theModule = this.modulesList.get(i);
                 if (isAssignments(theModule)){
                     System.out.println("Module: " + theModule.getModuleName() + " (" + theModule.getModuleCode() + ")");
                     theModule.displayNotCompletedAssignments();

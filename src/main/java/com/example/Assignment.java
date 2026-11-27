@@ -50,8 +50,6 @@ public class Assignment{
 
 
 
-
-
     public boolean isDateValid(String deadlineDate){
 
         String dateFormat = "dd/MM/uuuu";  // sets the allowed format - the uuuu means that it accounts for leap years and months having differet amounts of days
